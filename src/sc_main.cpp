@@ -34,7 +34,12 @@ int sc_main(int argc, char* argv[]){
    hmc.cub_in(cub_in);
    hmc.flit_out(flit_out);
 
+       
    hmc_tb testbench("hmc_testbench");
+   testbench.trace_name.clear();
+   if(argc == 2){
+        testbench.trace_name = std::string(argv[1]);
+   }
    testbench.clk(clk_transiever);
    testbench.reset(reset);
    testbench.address_in_t(address_in);
@@ -45,13 +50,13 @@ int sc_main(int argc, char* argv[]){
 	}
 	testbench.packet_out_t(flit_out);
 
+    testbench.open_trace();
+    sc_start();
 
-	sc_start();
-
-	hmc.get_statistics();
+    hmc.get_statistics();
 
 
-	return (0);
+    return (0);
 }
 
 

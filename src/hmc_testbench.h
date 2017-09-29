@@ -26,36 +26,12 @@ SC_MODULE(hmc_tb){
 	 sc_in<bool> clk;
 
 	 sc_in<sc_lv<128> > packet_out_t;
-
+        
+        string trace_name;
 	 SC_CTOR(hmc_tb){
  	 	 SC_THREAD (process);
  	 	 SC_METHOD(print);
  	 	 sensitive << packet_out_t;
-
- 	 	 ifstream fin;
- 	 	 fin.open("../trace.txt");
- 	     string c;
- 	     num_operations = 0;
- 	     while(!fin.eof()){
- 	    	operation op;
- 	    	fin >> c;
- 	        op.cmd = c;
- 	        fin >> c;
- 	        op.address = c;
- 	        fin >> c;
- 	        op.data_size = atoi(c.c_str());
- 	        op.data.resize(op.data_size);
- 	        for(int i = 0; i < op.data_size; i++){
- 	           fin >> c;
- 	           op.data[i] = atoi(c.c_str());
- 	        }
- 	        operations.push_back(op);
- 	        num_operations++;
-
- 	    }
-
- 	    fin.close();
- 	    counter = 0;
  	 }
 
 
@@ -65,6 +41,39 @@ SC_MODULE(hmc_tb){
 		 cout << packet_out_t.read().range(63,0) << endl;
 		 cout << endl;
  	 }
+ 	 
+ 	 void open_trace(){
+             
+ 	 	ifstream fin;
+                 if(trace_name.empty()){
+                    fin.open("trace.txt");
+                 }
+                 else{
+                     fin.open(trace_name.c_str()); 
+                 }
+                string c;
+                num_operations = 0;
+                while(!fin.eof()){
+                    operation op;
+                    fin >> c;
+                    op.cmd = c;
+                    fin >> c;
+                    op.address = c;
+                    fin >> c;
+                    op.data_size = atoi(c.c_str());
+                    op.data.resize(op.data_size);
+                    for(int i = 0; i < op.data_size; i++){
+                    fin >> c;
+                    op.data[i] = atoi(c.c_str());
+                    }
+                    operations.push_back(op);
+                    num_operations++;
+                }
+
+                fin.close();
+                counter = 0;
+             
+         }
 
  	 void process(){
  	 	 for(int i =0; i < 16; i++) data_in_t[i].write(i);

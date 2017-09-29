@@ -164,9 +164,9 @@ def create_write(testbench, operation_size, banks, responser):
             testbench.write('\n')
     
     
-def create_template(banks, output, operation, operation_size):
+def create_template(banks, output, operation, operation_size,trace_name):
     print banks, output
-    testbench = open('trace.txt', 'w+')
+    testbench = open(trace_name, 'w+')
     responser = open(output, 'w+')
     
     if(operation == "W"):
@@ -192,12 +192,13 @@ def create_template(banks, output, operation, operation_size):
 
 #usage number of banks - output name - W/R/WR - 32/64/128/256B
 num_of_arguments = len(sys.argv)
-if(num_of_arguments != 5):
+if(num_of_arguments != 6):
     print("Invalid number of arguments \n")
+    print("Usage: python trace_generator_rand.py NUMBER_INSTRUCTIONS GOLD_NAME W/R/WR 32/64/128/256B TRACE_NAME \n")
 else:
     num_banks = int(sys.argv[1])
     golden_output = (sys.argv[2])
     op = (sys.argv[3])
     op_size = int(sys.argv[4])
-    
-    create_template(num_banks, golden_output, op, op_size)
+    trace_name = (sys.argv[5])
+    create_template(num_banks, golden_output, op, op_size, trace_name)

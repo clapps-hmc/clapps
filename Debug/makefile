@@ -61,7 +61,7 @@ all: clapps
 clapps: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L/usr/local/systemc-2.3.1/lib-linux64 -o "clapps" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/systemc-2.3.1/lib-linux64 -o "../clapps" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

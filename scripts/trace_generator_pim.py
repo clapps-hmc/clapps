@@ -150,43 +150,28 @@ def create_pim(testbench, banks, responser):
         testbench.write('1 1')
         create_responser_pim(responser, 1)
         
-   #     testbench.write('0010010')
-   #     testbench.write(' '+get_address(1,1)+' ')
-   #     testbench.write('1 1')
-   #     create_responser_pim(responser, 1)
-        
         if(x != banks -1):
             testbench.write('\n')
             
     
     
-def create_template(banks, output):
+def create_template(banks, output, trace_name):
     print banks, output
-    testbench = open('trace.txt', 'w+')
+    testbench = open(trace_name, 'w+')
     responser = open(output, 'w+')
      
-   # print("write \n")
-   # create_write(testbench, banks, responser)    
-   # testbench.write('\n')
-        
-   # print("\n \n pim \n")
-   # reset_address() 
     create_pim(testbench, banks, responser)
-   # testbench.write('\n')
-    
-   # print("\n \n read \n")
-   # reset_address() 
-  #  create_read(testbench, banks, responser)    
-        
-    
+
     testbench.close();
     responser.close()
 
+
 num_of_arguments = len(sys.argv)
-if(num_of_arguments != 3):
+if(num_of_arguments != 4):
     print("Invalid number of arguments \n")
+    print("Usage: python trace_generator_pim.py NUMBER_INSTRUCTIONS GOLD_NAME TRACE_NAME \n")
 else:
     num_banks = int(sys.argv[1])
     golden_output = (sys.argv[2])
-    
-    create_template(num_banks, golden_output)
+    trace_name = (sys.argv[3])
+    create_template(num_banks, golden_output, trace_name)

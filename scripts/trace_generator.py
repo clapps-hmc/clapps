@@ -69,26 +69,6 @@ def create_responser_read(res, operation_size):
             upper[x] = str(bin(data)[2:].zfill(64))
             data = data + 1
 
-
-    #lower[0] = "0001111111111111111111"+bin(link)[2:].zfill(3)+"1111111111111111"+bin(tag)[2:].zfill(11)+"001010110011"
-    #upper[0] = str(bin(data)[2:].zfill(64))
-    #data = data + 1
-
-    #lower[1] = "0000000000000000000000000000000000000000000000000000000000000000"
-    #upper[1] = str(bin(data)[2:].zfill(64))
-    #data = data + 1
-    
-    #lower[2] = "0000000000000000000000000000000000000000000000000000000000000000"
-    #upper[2] = str(bin(data)[2:].zfill(64))
-    #data = data + 1
-
-    #lower[3] = "0000000000000000000000000000000000000000000000000000000000000000"
-    #upper[3] = str(bin(data)[2:].zfill(64))
-    #data = data + 1
-
-    #lower[4] = "0000000000000000000000000000000000000000000000000000000000000000"
-    #upper[4] = "0000000000000000000000000000000000000000000000000000000000000000"
-
     for x in range(0,total_pcks):
         res.write(upper[x])
         res.write('\n')
@@ -177,9 +157,9 @@ def create_write(testbench, operation_size, banks, responser):
             testbench.write('\n')
     
     
-def create_template(banks, output, operation, operation_size):
+def create_template(banks, output, operation, operation_size, trace_name):
     print banks, output
-    testbench = open('trace.txt', 'w+')
+    testbench = open(trace_name, 'w+')
     responser = open(output, 'w+')
     
     if(operation == "W"):
@@ -205,12 +185,13 @@ def create_template(banks, output, operation, operation_size):
 
 #usage number of banks - output name - W/R/WR - 32/64/128/256B
 num_of_arguments = len(sys.argv)
-if(num_of_arguments != 5):
+if(num_of_arguments != 6):
     print("Invalid number of arguments \n")
+    print("Usage: python trace_generator.py NUMBER_INSTRUCTIONS GOLD_NAME W/R/WR 32/64/128/256B TRACE_NAME \n")
 else:
     num_banks = int(sys.argv[1])
     golden_output = (sys.argv[2])
     op = (sys.argv[3])
     op_size = int(sys.argv[4])
-    
-    create_template(num_banks, golden_output, op, op_size)
+    trace_name = (sys.argv[5])
+    create_template(num_banks, golden_output, op, op_size, trace_name)
