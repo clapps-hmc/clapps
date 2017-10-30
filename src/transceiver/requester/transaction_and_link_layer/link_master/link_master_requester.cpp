@@ -116,8 +116,8 @@ sc_lv<TAG_SIZE> link_master_requester::generate_tag(){
 	sc_lv<TAG_SIZE> temp;
 	temp = tag;
 	tag_buffer.push(temp);
-	if(!running) running = true;
-
+	//if(!running) running = true;
+	first_flit_already_received = true;
 	tag_buffer_per_link[link].push(temp);
 	tag = (sc_lv<TAG_SIZE>) (tag.to_uint() + 1);
 
@@ -233,11 +233,12 @@ void link_master_requester::prc_check_tag_ordering(){
 }
 
 void link_master_requester::prc_check_stop_simulation(){
-	if(running && tag_buffer.empty()){
+	if(first_flit_already_received && tag_buffer.empty()){
 		traffic -> hmc_still_busy = false;
-		running = false;
+		response_queue_status = true;
 	}
 	else{
 		traffic -> hmc_still_busy = true;
+		response_queue_status = false;
 	}
 }

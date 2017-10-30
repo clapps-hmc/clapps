@@ -27,12 +27,15 @@ public:
 		bank_id = 0;
 		current_fsm = 5;
 		bank_available = true;
+		//status = false;
+		previous_offset = 16;
 	}
 
 	int vault_id;
 	unsigned bank_id;
 	unsigned current_fsm;
 	bool bank_available;
+	unsigned previous_offset;
 
 private:
 	std::unordered_map<unsigned, sc_lv<MAX_BLOCK_SIZE*8> > bank_storage;
@@ -43,7 +46,12 @@ private:
 	unsigned get_converted_address();
 	sc_lv<256> decode_row_buffer();
 	void write_row_buffer();
+	unsigned get_offset();
 	unsigned bank_size;
+	bool status;
+public:
+	void initialize_address(unsigned address, std::vector<unsigned> elem);
+	void print_bank_address(unsigned address);
 };
 
 #endif

@@ -14,7 +14,7 @@
 #define LOAD128 	"1000010"
 #define LOAD256 	"1000011"
 #define STORE32 	"1010000"
-#define STORE64 	"1010001"
+#define STORE64 	"1010000"
 #define STORE128 	"1010010"
 #define STORE256 	"1010011"
 #define ADD 		"0100000"

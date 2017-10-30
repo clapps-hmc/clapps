@@ -62,6 +62,9 @@ void request_traffic_controller::prc_traffic_controller_fsm(){
 			}
 
 			if(!pim_request_buffer.empty()){
+				//cout << "sending to pim \n";
+				//cout << pim_request_buffer.front().range(63,0) << endl << endl;
+
 				request_to_vault.write(pim_request_buffer.front());
 				request_available_to_vault.write(true);
 				pim_request_buffer.pop();

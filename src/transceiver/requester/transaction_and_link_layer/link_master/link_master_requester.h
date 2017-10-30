@@ -53,7 +53,8 @@ public:
         reading_bytes = 0;
         writing_bytes = 0;
         vault_to_send = 0;
-        running = false;
+        first_flit_already_received = false;
+        response_queue_status = false;
     }
 private:
     void prc_flit_generator();
@@ -73,14 +74,19 @@ private:
     std::queue<sc_lv<TAG_SIZE> > tag_buffer_per_link[NUMBER_OF_LINKS];
 
     unsigned round_robin;
-    bool running;
+    bool first_flit_already_received;
     unsigned vault_to_send;
     int reading_bytes;
     int writing_bytes;
+    bool response_queue_status; //true - empty false - not empty
     traffic_monitor *traffic;
 public:
     void set_traffic_monitor(traffic_monitor *t){
     	traffic = t;
+    }
+
+    bool response_queue_is_empty(){
+    	return response_queue_status;
     }
 };
 

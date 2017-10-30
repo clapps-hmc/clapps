@@ -114,16 +114,26 @@ public:
     }
 
     void checker(){
-    	bool status_all_pims = false;
+    	bool rvus_are_stale = true;
     	for(int i = 0; i < NUMBER_OF_VAULTS; i++)
-    		status_all_pims |= traffic.pim_still_busy[i];
-    	if(!traffic.hmc_still_busy && !status_all_pims)
+    		rvus_are_stale = rvus_are_stale && (mod_vault[i]->mod_vault_controller->mod_rvu-> rvu_is_stale());
+
+
+    	if(mod_transceiver->mod_requester->mod_transaction_and_link_layer->mod_link_master -> response_queue_is_empty() && rvus_are_stale)
     		sc_stop();
     }
 
-    void initialize_banks(){
-
+    void initialize_bank(unsigned vault_id, unsigned bank_id, unsigned address, vector<unsigned> elem){
+    	if(vault_id < 32 && bank_id < 16){
+    		mod_vault[vault_id] -> mod_bank[bank_id]-> initialize_address(address, elem);
+    	}
     }
+
+    void print_bank_address(unsigned vault_id, unsigned bank_id, unsigned address){
+        	if(vault_id < 32 && bank_id < 16){
+        		mod_vault[vault_id] -> mod_bank[bank_id]-> print_bank_address(address);
+        	}
+        }
 };
 
 

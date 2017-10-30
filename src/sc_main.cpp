@@ -34,6 +34,21 @@ int sc_main(int argc, char* argv[]){
    hmc.cub_in(cub_in);
    hmc.flit_out(flit_out);
 
+   vector<unsigned> tmp(8);
+   for(unsigned i = 0; i < 8; i++) tmp[i] = i;
+   /*
+    * Initialization per MAX_BLOCK_SIZE
+    * USAGE VAULT_ID, BANK_ID, ADDRESS
+    */
+
+   cout << "Initializating address 0, in bank 0, in vault 0 \n";
+   hmc.initialize_bank(0,0,0,tmp);
+   hmc.print_bank_address(0,0,0);
+
+   cout << "Initializating address 1, in bank 0, in vault 0 \n";
+   for(unsigned i = 8; i < 16; i++) tmp[i-8] = i;
+   hmc.initialize_bank(0,0,1,tmp);
+   hmc.print_bank_address(0,0,1);
        
    hmc_tb testbench("hmc_testbench");
    testbench.trace_name.clear();
@@ -49,11 +64,14 @@ int sc_main(int argc, char* argv[]){
 		testbench.data_in_t[i](data_in[i]);
 	}
 	testbench.packet_out_t(flit_out);
-
     testbench.open_trace();
     sc_start();
 
-    hmc.get_statistics();
+   // hmc.get_statistics();
+
+    cout << "Reading address 2, in bank 0, in vault 0 after RVU operations \n";
+    hmc.print_bank_address(0,0,2);
+
 
 
     return (0);

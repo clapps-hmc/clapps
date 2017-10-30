@@ -49,6 +49,7 @@ public:
 		counter = 0;
 		rvu_id = 0;
 		traffic = NULL;
+		rvu_stale = true; //true - stale false - running
 	}
 
 private:
@@ -62,7 +63,7 @@ private:
 	sc_lv<4> request_size;
 	sc_lv<34> addr;
 	sc_lv<3> alu_op;
-
+	bool rvu_stale;
 	void prc_rvu();
 	void decode_instruction();
 	void exec();
@@ -72,6 +73,9 @@ public:
     unsigned rvu_id;
     void set_traffic_monitor(traffic_monitor *t){
     	traffic = t;
+    }
+    bool rvu_is_stale(){
+    	return rvu_stale;
     }
 
 };

@@ -14,6 +14,7 @@ struct operation{
     string address;
     int data_size;
     vector<int> data;
+    string rvu_instruction;
 };
 
 SC_MODULE(hmc_tb){
@@ -43,7 +44,6 @@ SC_MODULE(hmc_tb){
  	 }
  	 
  	 void open_trace(){
-             
  	 	ifstream fin;
                  if(trace_name.empty()){
                     fin.open("trace.txt");
@@ -57,14 +57,22 @@ SC_MODULE(hmc_tb){
                     operation op;
                     fin >> c;
                     op.cmd = c;
+                    //cerr << op.cmd << endl;
                     fin >> c;
                     op.address = c;
                     fin >> c;
                     op.data_size = atoi(c.c_str());
                     op.data.resize(op.data_size);
-                    for(int i = 0; i < op.data_size; i++){
-                    fin >> c;
-                    op.data[i] = atoi(c.c_str());
+                    if(op.cmd == "0000001"){
+                    	fin >> c;
+                    	op.rvu_instruction = c;
+
+                    }
+                    else{
+                    	for(int i = 0; i < op.data_size; i++){
+                    		fin >> c;
+                    		op.data[i] = atoi(c.c_str());
+                    	}
                     }
                     operations.push_back(op);
                     num_operations++;
@@ -72,7 +80,6 @@ SC_MODULE(hmc_tb){
 
                 fin.close();
                 counter = 0;
-             
          }
 
  	 void process(){
@@ -86,16 +93,22 @@ SC_MODULE(hmc_tb){
 
 
  	 	 for(int i = 0; i < num_operations; i++){
- 	 		 if(operations[i].data_size != 0){
- 	 			 if(operations[i].data_size == 1){
- 	 				 data_in_t[0].write("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001");
- 	 			 }
- 	 			 else{
- 	 				 for(int j = 0; j < operations[i].data_size; j++)
- 	 					 data_in_t[j].write(operations[i].data[j]);
- 	 			 }
+ 	 		 if(operations[i].cmd == "0000001"){
+ 	 			data_in_t[0].write(operations[i].rvu_instruction.c_str());
+ 	 		 }
+ 	 		 else{
+				 if(operations[i].data_size != 0){
+					 if(operations[i].data_size == 1){
+						 data_in_t[0].write("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001");
+					 }
+					 else{
+						 for(int j = 0; j < operations[i].data_size; j++)
+							 data_in_t[j].write(operations[i].data[j]);
+					 }
+				 }
  	 		 }
  	 		 address_in_t.write(operations[i].address.c_str());
+ 	 		 //cout << "input address: " << operations[i].address << endl;
  	 		 cmd_in_t.write(operations[i].cmd.c_str());
 
  	 	 	 wait(TRANS_CLOCK_RATE,SC_NS);

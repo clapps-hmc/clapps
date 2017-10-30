@@ -11,13 +11,14 @@ void tsv_controller::prc_tsv_controller(){
 	for(unsigned i = 0; i < FAW; i++){
 		if(i == round_robin){
 			if(we[i].read()){
-				if(fsm_operation[i].read() == "01")
+				if(fsm_operation[i].read() == "01"){
 					data_to_bank[bank_id[i].read().to_uint()].write(data_from_data_buffer[i].read());
-				else
+				}else{
 					data_to_bank[bank_id[i].read().to_uint()].write(data_from_pim_data_buffer[i].read());
-
+				}
 				write_available[bank_id[i].read().to_uint()].write(true);
 				ack_request[i].write(true);
+				//cout << " @" << sc_time_stamp() << "we is high \n";
 			}
 			else if(oe[i].read()){
 				if(data_available_to_read[bank_id[i].read().to_uint()].read()){

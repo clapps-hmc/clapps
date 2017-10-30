@@ -155,13 +155,13 @@ void memory_controller::prc_fsm(){
 		case TSV_CONTROL:
 			if(previous == WE){
 				cs.write(false); ras.write(false); cas.write(false); we.write(true); oe.write(false); exec.write(false), done.write(false);
-
 				if(ack_from_tsv.read()){
 					en_pop_bank_data_request_buffer.write(true);
 					current = WE;
 				}
-				else
+				else{
 					current = TSV_CONTROL;
+				}
 			}
 			else if(previous == OE){
 				cs.write(false); ras.write(false); cas.write(false); we.write(false); oe.write(true); exec.write(false), done.write(false);;
